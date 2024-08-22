@@ -186,4 +186,36 @@ class ArticleController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
     }
+
+    #[Route('/api/articles/{id}', methods:["DELETE"], name: 'article_delete')]
+    public function deleteArticle(int $id): JsonResponse
+    {
+        try{
+            $article = $this->articleRepository->find($id);
+
+            if(!$article){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Article with id '.$id.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $this->em->remove($article);
+            $this->em->flush();
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                'message' => 'Article with id '.$id.' deleted with success',
+            ], Response::HTTP_OK);
+        }   
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
