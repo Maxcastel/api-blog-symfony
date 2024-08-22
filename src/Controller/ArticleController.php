@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\Repository\UserRepository;
 use App\Repository\ArticleRepository;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class ArticleController extends AbstractController
 {
@@ -42,6 +43,12 @@ class ArticleController extends AbstractController
             $article->setCreationDate(new \DateTime()); 
             
             $this->em->persist($article);
+            $this->em->flush();
+
+            $slugger = new AsciiSlugger();
+
+            $article->setLink($slugger->slug($data['title'])->lower().'-'.$article->getId());
+
             $this->em->flush();
             
             return $this->json([
