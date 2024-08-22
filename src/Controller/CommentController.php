@@ -148,4 +148,36 @@ class CommentController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
     }
+
+    #[Route('/api/comments/{id}', methods:["DELETE"], name: 'comment_delete')]
+    public function deleteComment(int $id): JsonResponse
+    {
+        try{
+            $comment = $this->commentRepository->find($id);
+
+            if(!$comment){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Comment with id '.$id.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $this->em->remove($comment);
+            $this->em->flush();
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                'message' => 'Deleted with success',
+            ], Response::HTTP_OK);
+        }
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
