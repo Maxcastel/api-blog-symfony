@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -12,31 +13,40 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getArticle"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getArticle"])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getArticle"])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(["getArticle"])]
     private ?string $content = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["getArticle"])]
     private ?string $link = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(["getArticle"])]
     private ?\DateTimeInterface $lastUpdate = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(["getArticle"])]
     private ?string $imageUrl = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(["getArticle"])]
     private ?\DateTimeInterface $creationDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getArticle"])]
     private ?User $user = null;
 
     public function getId(): ?int
