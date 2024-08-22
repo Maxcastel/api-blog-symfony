@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\Repository\UserRepository;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use App\Entity\Comment;
 
 class CommentController extends AbstractController
@@ -19,13 +20,20 @@ class CommentController extends AbstractController
     private $serializer;
     private $userRepository;
     private $articleRepository;
+    private $commentRepository;
 
-    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer, UserRepository $userRepository, ArticleRepository $articleRepository)
-    {
+    public function __construct(
+        EntityManagerInterface $em, 
+        SerializerInterface $serializer, 
+        UserRepository $userRepository, 
+        ArticleRepository $articleRepository,
+        CommentRepository $commentRepository
+    ){
         $this->em = $em;
         $this->serializer = $serializer;
         $this->userRepository = $userRepository;
         $this->articleRepository = $articleRepository;
+        $this->commentRepository = $commentRepository;
     }
 
     #[Route('/api/comments', methods:["POST"], name: 'comment_create')]
@@ -79,6 +87,26 @@ class CommentController extends AbstractController
                 'message' => 'Created with success',
             ], Response::HTTP_CREATED, [], ['groups' => 'getComment']);
         }   
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+    
+    #[Route('/api/comments', methods:["GET"], name: 'comment_show_all')]
+    public function getAllComments(Request $request): JsonResponse
+    {
+        try{
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                "data" => $this->commentRepository->findAll(),
+                'message' => 'Operation with success',
+            ], Response::HTTP_OK, [], ['groups' => 'getComment']);
+        }
         catch(\Exception $e){
             return $this->json([
                 "status" => 400,
