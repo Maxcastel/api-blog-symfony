@@ -9,29 +9,27 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ArticleController extends AbstractController
 {
     private $em;
+    private $serializer;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SerializerInterface $serializer)
     {
         $this->em = $em;
+        $this->serializer = $serializer;
     }
 
     #[Route('/api/articles', methods:["POST"], name: 'article_create')]
     public function createArticle(Request $request): JsonResponse
     {
         try{
-            $article = new Article();
+            $article = $this->serializer->deserialize($request->getContent(), Article::class, 'json');
+            
+            date_default_timezone_set('Europe/Paris');
 
-            $data = json_decode($request->getContent(), true);
-
-            $article->setTitle($data['title']);
-            $article->setDescription($data['description']);
-            $article->setContent("aaa");
-            $article->setLink("https://www.google.com");
-            $article->setImageUrl("https://www.google.com"); 
             $article->setCreationDate(new \DateTime()); 
             
             $this->em->persist($article);
