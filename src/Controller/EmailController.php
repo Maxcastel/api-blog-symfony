@@ -85,4 +85,34 @@ class EmailController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
     }
+
+    #[Route('/api/emails/{id}', methods:["GET"], name: 'email_show')]
+    public function getEmail(int $id): JsonResponse
+    {
+        try{
+            $email = $this->emailRepository->find($id);
+
+            if(!$email){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Email with id '.$id.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                "data" => $email,
+                'message' => 'Operation completed with success',
+            ], Response::HTTP_OK);
+        }
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
