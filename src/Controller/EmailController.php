@@ -65,4 +65,24 @@ class EmailController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
     }
+    
+    #[Route('/api/emails', methods:["GET"], name: 'email_show_all')]
+    public function getAllEmails(): JsonResponse
+    {
+        try{
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                "data" => $this->emailRepository->findAll(),
+                'message' => 'Operation completed with success',
+            ], Response::HTTP_OK);
+        }
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
