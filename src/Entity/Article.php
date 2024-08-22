@@ -29,6 +29,9 @@ class Article
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastUpdate = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $imageUrl = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class Article
     public function setLastUpdate(?\DateTimeInterface $lastUpdate): static
     {
         $this->lastUpdate = $lastUpdate;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(string $imageUrl): static
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }
