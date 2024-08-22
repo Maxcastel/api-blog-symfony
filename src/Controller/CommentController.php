@@ -97,14 +97,47 @@ class CommentController extends AbstractController
     }
     
     #[Route('/api/comments', methods:["GET"], name: 'comment_show_all')]
-    public function getAllComments(Request $request): JsonResponse
+    public function getAllComments(): JsonResponse
     {
         try{
             return $this->json([
                 "status" => 200,
                 "success" => true,
                 "data" => $this->commentRepository->findAll(),
-                'message' => 'Operation with success',
+                'message' => 'Operation completed with success',
+            ], Response::HTTP_OK, [], ['groups' => 'getComment']);
+        }
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+    
+    #[Route('/api/comments/{id}', methods:["PATCH"], name: 'comment_validate')]
+    public function validateComment(int $id): JsonResponse
+    {
+        try{
+            $comment = $this->commentRepository->find($id);
+
+            if(!$comment){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Comment with id '.$id.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $comment->setIsvalid(true);
+            $this->em->flush();
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                "data" => $comment,
+                'message' => 'Validated with success',
             ], Response::HTTP_OK, [], ['groups' => 'getComment']);
         }
         catch(\Exception $e){
