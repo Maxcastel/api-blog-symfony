@@ -116,4 +116,64 @@ class ArticleController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
     }
+    
+    #[Route('/api/articles/{id}', methods:["PUT"], name: 'article_edit')]
+    public function editArticle(int $id, Request $request): JsonResponse
+    {
+        try{
+            $article = $this->articleRepository->find($id);
+
+            if(!$article){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Article with id '.$id.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $data = json_decode($request->getContent(), true);
+
+            $user = $this->userRepository->find($data['userId']);
+
+            if(!$user){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'User with id '.$data['userId'].' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $article->setTitle($data['title']);
+            $article->setDescription($data['description']);
+            $article->setContent($data['content']);
+            $article->setImageUrl($data['imageUrl']);
+
+            date_default_timezone_set('Europe/Paris');
+
+            $article->setCreationDate($article->getCreationDate()); 
+            $article->setLastUpdate(new \DateTime());
+            
+            $article->setUser($user);
+
+            $slugger = new AsciiSlugger();
+
+            $article->setLink($slugger->slug($data['title'])->lower().'-'.$article->getId());
+
+            $this->em->flush();
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                "data" => $article,
+                'message' => 'Operation completed with success',
+            ], Response::HTTP_OK, [], ['groups' => 'getArticle']);
+        }   
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
