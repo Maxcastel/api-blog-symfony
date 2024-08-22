@@ -36,7 +36,17 @@ class ArticleController extends AbstractController
             $data = json_decode($request->getContent(), true);
             $article = $this->serializer->deserialize($request->getContent(), Article::class, 'json');
             
-            $article->setUser($this->userRepository->find($data['userId']));
+            $user = $this->userRepository->find($data['userId']);
+
+            if(!$user){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'User with id '.$data['userId'].' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $article->setUser($user);
 
             date_default_timezone_set('Europe/Paris');
 
