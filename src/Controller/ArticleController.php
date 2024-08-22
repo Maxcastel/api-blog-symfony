@@ -54,8 +54,8 @@ class ArticleController extends AbstractController
             return $this->json([
                 "status" => 201,
                 "success" => true,
-                'message' => 'Created with success',
                 "data" => $article,
+                'message' => 'Created with success',
             ], Response::HTTP_CREATED, [], ['groups' => 'getArticle']);
         }   
         catch(\Exception $e){
@@ -76,6 +76,36 @@ class ArticleController extends AbstractController
                 "success" => true,
                 'message' => 'Operation completed with success',
                 "data" => $this->articleRepository->findAll(),
+            ], Response::HTTP_OK, [], ['groups' => 'getArticle']);
+        }   
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    #[Route('/api/articles/{slug}', methods:["GET"], name: 'article_show')]
+    public function getArticle(string $slug): JsonResponse
+    {
+        try{
+            $article = $this->articleRepository->findOneBy(['link' => $slug]);
+
+            if(!$article){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Article with link '.$slug.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                "data" => $article,
+                'message' => 'Operation completed with success',
             ], Response::HTTP_OK, [], ['groups' => 'getArticle']);
         }   
         catch(\Exception $e){
