@@ -115,4 +115,36 @@ class EmailController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
     }
+    
+    #[Route('/api/emails/{id}', methods:["DELETE"], name: 'email_delete')]
+    public function deleteEmail(int $id): JsonResponse
+    {
+        try{
+            $email = $this->emailRepository->find($id);
+
+            if(!$email){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Email with id '.$id.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            $this->em->remove($email);
+            $this->em->flush();
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                'message' => 'Deleted with success',
+            ], Response::HTTP_OK);
+        }
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
