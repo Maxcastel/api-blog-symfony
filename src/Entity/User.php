@@ -16,15 +16,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticl", "getComment"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private array $roles = [];
 
     /**
@@ -34,11 +34,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $lastName = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class)]

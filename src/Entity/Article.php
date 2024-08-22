@@ -15,35 +15,35 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $content = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $link = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?\DateTimeInterface $lastUpdate = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?string $imageUrl = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(["getArticle"])]
+    #[Groups(["getArticle", "getComment"])]
     private ?\DateTimeInterface $creationDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
