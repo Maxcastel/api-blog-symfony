@@ -13,6 +13,7 @@ use App\Repository\UserRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use App\Entity\Comment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class CommentController extends AbstractController
 {
@@ -97,6 +98,7 @@ class CommentController extends AbstractController
     }
     
     #[Route('/api/comments', methods:["GET"], name: 'comment_show_all')]
+    #[IsGranted('ROLE_USER')]
     public function getAllComments(): JsonResponse
     {
         try{
@@ -117,6 +119,7 @@ class CommentController extends AbstractController
     }
     
     #[Route('/api/comments/{id}', methods:["PATCH"], name: 'comment_validate')]
+    #[IsGranted('ROLE_USER')]
     public function validateComment(int $id): JsonResponse
     {
         try{
@@ -150,6 +153,7 @@ class CommentController extends AbstractController
     }
 
     #[Route('/api/comments/{id}', methods:["DELETE"], name: 'comment_delete')]
+    #[IsGranted('ROLE_USER')]
     public function deleteComment(int $id): JsonResponse
     {
         try{
