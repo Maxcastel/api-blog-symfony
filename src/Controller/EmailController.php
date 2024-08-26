@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\Entity\Email;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email as MimeEmail;
 
@@ -28,6 +29,7 @@ class EmailController extends AbstractController
     }
 
     #[Route('/api/emails', methods:["POST"], name: 'email_send')]
+    #[IsGranted('ROLE_ADMIN')]
     public function sendEmail(Request $request, MailerInterface $mailer): JsonResponse
     {
         try{
@@ -67,6 +69,7 @@ class EmailController extends AbstractController
     }
     
     #[Route('/api/emails', methods:["GET"], name: 'email_show_all')]
+    #[IsGranted('ROLE_ADMIN')]
     public function getAllEmails(): JsonResponse
     {
         try{
@@ -87,6 +90,7 @@ class EmailController extends AbstractController
     }
 
     #[Route('/api/emails/{id}', methods:["GET"], name: 'email_show')]
+    #[IsGranted('ROLE_ADMIN')]
     public function getEmail(int $id): JsonResponse
     {
         try{
@@ -117,6 +121,7 @@ class EmailController extends AbstractController
     }
     
     #[Route('/api/emails/{id}', methods:["DELETE"], name: 'email_delete')]
+    #[IsGranted('ROLE_ADMIN')]
     public function deleteEmail(int $id): JsonResponse
     {
         try{
