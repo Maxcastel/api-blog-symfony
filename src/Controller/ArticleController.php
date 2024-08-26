@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use App\Repository\UserRepository;
 use App\Repository\ArticleRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class ArticleController extends AbstractController
@@ -30,6 +31,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/api/articles', methods:["POST"], name: 'article_create')]
+    #[IsGranted('ROLE_ADMIN')]
     public function createArticle(Request $request): JsonResponse
     {
         try{
@@ -128,6 +130,7 @@ class ArticleController extends AbstractController
     }
     
     #[Route('/api/articles/{id}', methods:["PUT"], name: 'article_edit')]
+    #[IsGranted('ROLE_ADMIN')]
     public function editArticle(int $id, Request $request): JsonResponse
     {
         try{
@@ -188,6 +191,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/api/articles/{id}', methods:["DELETE"], name: 'article_delete')]
+    #[IsGranted('ROLE_ADMIN')]
     public function deleteArticle(int $id): JsonResponse
     {
         try{
