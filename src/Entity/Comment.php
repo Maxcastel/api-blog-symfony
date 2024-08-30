@@ -13,24 +13,24 @@ class Comment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getComment"])]
+    #[Groups(["getComment", "getArticle"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(["getComment"])]
+    #[Groups(["getComment", "getArticle"])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(["getComment"])]
+    #[Groups(["getComment", "getArticle"])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column]
-    #[Groups(["getComment"])]
+    #[Groups(["getComment", "getArticle"])]
     private ?bool $isValid = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getComment"])]
+    #[Groups(["getComment", "getArticle"])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]

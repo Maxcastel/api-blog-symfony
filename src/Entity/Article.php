@@ -52,6 +52,7 @@ class Article
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class)]
+    #[Groups(["getArticle"])]
     private Collection $comments;
 
     public function __construct()
