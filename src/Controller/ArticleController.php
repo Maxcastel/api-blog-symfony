@@ -99,8 +99,38 @@ class ArticleController extends AbstractController
         }
     }
 
-    #[Route('/api/articles/{slug}', methods:["GET"], name: 'article_show')]
-    public function getArticle(string $slug): JsonResponse
+    #[Route('/api/articles/{id<\d+>}', methods:["GET"], name: 'article_show_one_byid')]
+    public function getArticleById(int $id): JsonResponse
+    {
+        try{
+            $article = $this->articleRepository->find($id);
+
+            if(!$article){
+                return $this->json([
+                    "status" => 404,
+                    "success" => false,
+                    'message' => 'Article with id '.$id.' not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->json([
+                "status" => 200,
+                "success" => true,
+                "data" => $article,
+                'message' => 'Operation completed with success',
+            ], Response::HTTP_OK, [], ['groups' => 'getArticle']);
+        }   
+        catch(\Exception $e){
+            return $this->json([
+                "status" => 400,
+                "success" => false,
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    #[Route('/api/articles/{slug<[a-zA-Z0-9\-]+>}', methods:["GET"], name: 'article_show_one_byslug')]
+    public function getArticleBySlug(string $slug): JsonResponse
     {
         try{
             $article = $this->articleRepository->findOneBy(['link' => $slug]);
